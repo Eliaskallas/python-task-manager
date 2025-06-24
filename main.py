@@ -32,6 +32,20 @@ class TaskQueue:
     def get_all_tasks(self):
         return self.queue
 
+# Function complete_next_task to complete the next task (highest priority)
+def complete_next_task(queue):
+    if queue.is_empty():
+        print("No tasks to complete.")
+        return
+
+    # Find task with highest priority (lowest value)
+    highest_priority_task = queue.queue[0]
+    for task in queue.queue:
+        if task.priority < highest_priority_task.priority:
+            highest_priority_task = task
+    queue.queue.remove(highest_priority_task)
+    print("Completed task: " + str(highest_priority_task))
+
 # main
 queue = TaskQueue()
 while True: # validation of number of tasks
@@ -66,6 +80,13 @@ for i in range(num_tasks):
         except:
             print("Enter a valid int")
     queue.insert(task(title, duration, priority))
+
+print("\nAll Tasks in Queue:")
+for task in queue.get_all_tasks():
+    print(task)
+
+print("\nCompleting next highest priority task")
+complete_next_task(queue)
 
 print("\nAll Tasks in Queue:")
 for task in queue.get_all_tasks():
