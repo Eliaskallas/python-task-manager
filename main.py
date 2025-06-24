@@ -32,7 +32,7 @@ class TaskQueue:
     def get_all_tasks(self):
         return self.queue
 
-# Function complete_next_task to complete the next task (highest priority)
+# Function "complete_next_task" to complete the next task (highest priority)
 def complete_next_task(queue):
     if queue.is_empty():
         print("No tasks to complete.")
@@ -45,6 +45,39 @@ def complete_next_task(queue):
             highest_priority_task = task
     queue.queue.remove(highest_priority_task)
     print("Completed task: " + str(highest_priority_task))
+
+
+# Function "search_for_task" is a binary search function that operates on a queue sorted by task's title
+def search_for_task(queue, title):
+    # Step 1: Sort the queue manually using binary insertion sort (case-insensitive by title)
+    tasks = queue.queue
+    sorted_tasks = []
+    for task in tasks:
+        left = 0
+        right = len(sorted_tasks) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            if task.title.lower() < sorted_tasks[mid].title.lower():
+                right = mid - 1
+            else:
+                left = mid + 1
+        sorted_tasks.insert(left, task)
+    # Step 2: Binary search in sorted_tasks to find the target title
+    low = 0
+    high = len(sorted_tasks) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        mid_title = sorted_tasks[mid].title.lower()
+        search_title = title.lower()
+
+        if mid_title == search_title:
+            return sorted_tasks[mid]
+        elif mid_title < search_title:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    return None
 
 # main
 queue = TaskQueue()
@@ -85,8 +118,24 @@ print("\nAll Tasks in Queue:")
 for task in queue.get_all_tasks():
     print(task)
 
+print("\nSearch for a Task")
+search_title = input("Enter the title to search for: ")
+found = search_for_task(queue, search_title)
+if found:
+    print("Task found:", found)
+else:
+    print("Task not found.")
+
 print("\nCompleting next highest priority task")
 complete_next_task(queue)
+
+print("\nSearch for a Task")
+search_title = input("Enter the title to search for: ")
+found = search_for_task(queue, search_title)
+if found:
+    print("Task found:", found)
+else:
+    print("Task not found.")
 
 print("\nAll Tasks in Queue:")
 for task in queue.get_all_tasks():
