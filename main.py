@@ -79,6 +79,29 @@ def search_for_task(queue, title):
 
     return None
 
+# Function "sort_tasks" to sort tasks by duration
+def sort_tasks(queue, ascending = True):
+    tasks = queue.queue
+    sorted_tasks = []
+    for task in tasks:
+        index = 0
+        while index < len(sorted_tasks):
+            if ascending:
+                if task.duration < sorted_tasks[index].duration:
+                    break
+            else:
+                if task.duration > sorted_tasks[index].duration:
+                    break
+            index += 1
+        sorted_tasks.insert(index, task)
+
+    # Rebuild the queue with sorted tasks
+    new_queue = TaskQueue()
+    for task in sorted_tasks:
+        new_queue.insert(task)
+
+    return new_queue
+
 # main
 queue = TaskQueue()
 while True: # validation of number of tasks
@@ -116,6 +139,11 @@ for i in range(num_tasks):
 
 print("\nAll Tasks in Queue:")
 for task in queue.get_all_tasks():
+    print(task)
+
+print("\nTasks Sorted by Duration")
+sorted_queue = sort_tasks(queue)
+for task in sorted_queue.get_all_tasks():
     print(task)
 
 print("\nSearch for a Task")
